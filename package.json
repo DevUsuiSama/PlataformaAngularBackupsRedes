@@ -10,13 +10,19 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^20.0.2",
     "@angular/common": "^20.0.0",
     "@angular/compiler": "^20.0.0",
     "@angular/core": "^20.0.0",
     "@angular/forms": "^20.0.0",
+    "@angular/material": "^20.0.2",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@auth0/angular-jwt": "^5.2.0",
+    "@tailwindcss/postcss": "^4.1.8",
+    "postcss": "^8.5.4",
     "rxjs": "~7.8.0",
+    "tailwindcss": "^4.1.8",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

@@ -1,0 +1,65 @@
+<div class="relative flex h-screen items-center justify-center bg-black overflow-hidden">
+  <!-- Efecto de escaneo vertical -->
+  <div class="absolute inset-0 z-1 bg-gradient-to-b from-transparent via-red-500/10 to-transparent animate-scan h-20"></div>
+
+  <!-- Fondo animado de partículas -->
+  <canvas #cyberCanvas class="absolute inset-0 z-0 w-full h-full"></canvas>
+
+  <!-- Contenido principal -->
+  <div class="relative z-10 text-center p-12 rounded-xl border border-red-500/30 backdrop-blur-md shadow-2xl shadow-red-500/20 transform transition-all duration-500 hover:shadow-red-500/40 hover:border-red-400/60">
+    <!-- Título 404 con efecto glitch -->
+    <div class="relative inline-block">
+      <h1 class="text-9xl font-bold text-red-400 mb-4 glitch" data-text="404">404</h1>
+    </div>
+
+    <!-- Mensaje descriptivo -->
+    <p class="mt-6 text-2xl font-mono text-red-300 tracking-wider">
+      ERROR: RUTA NO ENCONTRADA
+    </p>
+    <p class="mt-4 text-lg text-red-200/80 max-w-md mx-auto">
+      El sistema no puede localizar el recurso solicitado en el ciberespacio.
+      <span class="inline-block mt-2">(╯°□°)╯︵ ┻━┻</span>
+    </p>
+
+    <!-- Botón de acción -->
+    <div class="mt-8 max-w-xs mx-auto">
+      <a href="/login"
+         class="relative inline-block px-8 py-4 font-mono text-red-300 border-2 border-red-500/50 rounded-lg overflow-hidden group transition-all duration-500 hover:shadow-red-500/30 hover:text-red-100">
+        <span class="relative z-10 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          REGRESAR AL LOGIN
+        </span>
+        <span class="absolute inset-0 bg-red-500/10 w-0 group-hover:w-full transition-all duration-700 ease-in-out"></span>
+        <span class="absolute bottom-0 left-0 h-0.5 bg-red-400 w-0 group-hover:w-full transition-all duration-500 delay-100"></span>
+      </a>
+    </div>
+
+    <!-- Código de error simulado -->
+    <div class="mt-10 p-4 bg-black/50 border border-red-900/50 rounded-md text-left font-mono text-xs text-red-400/60">
+      <div class="flex">
+        <span class="text-red-500/80 mr-4">1</span>
+        <span>ERROR 404: RouteNotFoundException</span>
+      </div>
+      <div class="flex">
+        <span class="text-red-500/80 mr-4">2</span>
+        <span>at CyberSpaceRouter.resolve (router.core:127:42)</span>
+      </div>
+      <div class="flex">
+        <span class="text-red-500/80 mr-4">3</span>
+        <span>at QuantumRequestHandler.process (handler.qnt:89:15)</span>
+      </div>
+      <div class="flex">
+        <span class="text-red-500/80 mr-4">4</span>
+        <span>> Last known position: [x: 0.4471, y: -1.3372]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Efecto de esquinas -->
+  <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-red-500"></div>
+  <div class="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-red-500"></div>
+  <div class="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-red-500"></div>
+  <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-red-500"></div>
+</div>

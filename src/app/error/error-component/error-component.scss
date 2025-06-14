@@ -1,0 +1,13 @@
+.neon-glow {
+  text-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
+}
+
+/* Animaciones */
+@keyframes scan {
+  0% { top: -20%; }
+  100% { top: 120%; }
+}
+
+.animate-scan {
+  animation: scan 4s linear infinite;
+}

@@ -1,0 +1,89 @@
+<div class="relative h-screen overflow-hidden bg-gray-950 flex flex-col justify-center items-center space-y-10">
+  <!-- Canvas para animación background -->
+  <canvas #cyberCanvas class="absolute inset-0 z-0 w-full h-full"></canvas>
+
+  <!-- Encabezado Institucional (fuera de la tarjeta) -->
+  <div class="relative z-10 text-center text-cyan-300 font-mono px-4 space-y-2">
+    <h1 class="text-4xl font-semibold">Universidad de la Cuenca del Plata</h1>
+    <p class="text-base">Facultad de Ingeniería y Tecnología, Ingeniería de Software II</p>
+    <p class="text-sm"><strong>Integrantes:</strong> Luciana Rojas, Ezequiel Neyen Troche y José Fernando Usui.</p>
+  </div>
+
+  <!-- Tarjeta de Login -->
+  <div class="relative z-10 w-80 p-10 backdrop-blur-sm border border-cyan-400/50 rounded-lg
+              shadow-lg shadow-cyan-500/20 backdrop-blur-sm
+              transition-all duration-500 hover:shadow-cyan-500/40 hover:border-cyan-400/80">
+
+    <h1 class="text-cyan-400 text-center font-mono text-xl tracking-widest mb-8
+               animate-pulse pb-8">
+      INGRESAR AL PANEL
+    </h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Input Usuario -->
+      <div class="relative group">
+        <input
+          formControlName="username"
+          type="text"
+          id="username"
+          required
+          class="w-full bg-transparent border-0 border-b border-gray-600 text-cyan-300
+                 font-mono outline-none focus:border-cyan-400 peer transition-colors"
+        />
+        <label
+          for="username"
+          class="absolute left-0 top-0 text-gray-400 font-mono transition-all duration-300
+                 peer-focus:-top-5 peer-focus:text-xs peer-focus:text-cyan-400
+                 peer-valid:-top-5 peer-valid:text-xs peer-valid:text-cyan-400"
+        >
+          NOMBRE DE USUARIO
+        </label>
+        <div class="absolute bottom-0 left-0 h-0.5 bg-cyan-400 w-0
+                    peer-focus:w-full peer-valid:w-full transition-all duration-500"></div>
+      </div>
+
+      <!-- Input Password -->
+      <div class="relative group">
+        <input
+          formControlName="password"
+          type="password"
+          id="password"
+          required
+          class="w-full bg-transparent border-0 border-b border-gray-600 text-cyan-300
+                 font-mono outline-none focus:border-cyan-400 peer transition-colors"
+        />
+        <label
+          for="password"
+          class="absolute left-0 top-0 text-gray-400 font-mono transition-all duration-300
+                 peer-focus:-top-5 peer-focus:text-xs peer-focus:text-cyan-400
+                 peer-valid:-top-5 peer-valid:text-xs peer-valid:text-cyan-400"
+        >
+          CONTRASEÑA
+        </label>
+        <div class="absolute bottom-0 left-0 h-0.5 bg-cyan-400 w-0
+                    peer-focus:w-full peer-valid:w-full transition-all duration-500"></div>
+      </div>
+
+      <!-- Botón con efecto -->
+      <button
+        type="submit"
+        class="w-full py-3 bg-transparent border border-cyan-400/50 text-cyan-300
+               font-mono tracking-widest relative overflow-hidden
+               hover:shadow-cyan-500/40 hover:text-cyan-100 hover:border-cyan-400
+               transition-all duration-300 group"
+        [disabled]="loginForm.invalid"
+      >
+        <span class="relative z-10">INGRESAR</span>
+        <span class="absolute inset-0 bg-cyan-400/10 w-0 group-hover:w-full
+                    transition-all duration-500 ease-in-out"></span>
+      </button>
+
+      <!-- Mensaje de error -->
+      @if (errorMessage) {
+        <div class="text-red-500 neon-glow animate-pulse text-center text-lg font-mono">
+          {{ errorMessage }}
+        </div>
+      }
+    </form>
+  </div>
+</div>

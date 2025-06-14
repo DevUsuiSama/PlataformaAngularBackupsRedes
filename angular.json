@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "sass"
+          "style": "scss"
         }
       },
       "root": "",
@@ -19,7 +19,7 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "sass",
+            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -27,7 +27,7 @@
               }
             ],
             "styles": [
-              "src/styles.sass"
+              "src/styles.scss"
             ]
           },
           "configurations": {
@@ -81,11 +81,14 @@
               }
             ],
             "styles": [
-              "src/styles.sass"
+              "src/styles.scss"
             ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "fdb06710-4829-46a2-b477-edc54e09dd89"
   }
 }

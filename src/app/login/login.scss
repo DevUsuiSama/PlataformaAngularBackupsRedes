@@ -1,0 +1,17 @@
+/* Estilo para botón deshabilitado */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #4b5563 !important;
+  color: #4b5563 !important;
+
+  &:hover {
+    box-shadow: none !important;
+  }
+}
+
+@layer utilities {
+  .neon-glow {
+    text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff0000;
+  }
+}

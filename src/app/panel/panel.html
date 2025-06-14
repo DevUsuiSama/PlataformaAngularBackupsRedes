@@ -1,0 +1,463 @@
+<div class="relative min-h-screen bg-black/80 text-cyan-50 font-mono overflow-hidden">
+  <!-- Efecto de escaneo futurista -->
+  <div class="absolute inset-0 z-1 bg-gradient-to-b from-transparent via-cyan-500/20 to-transparent animate-scan h-32"></div>
+
+  <!-- Barra superior sólida con botón de logout -->
+  <div class="absolute top-0 left-0 right-0 z-20 bg-black/80 border-b border-cyan-500/20 p-4 flex justify-between items-center">
+    <!-- Título alineado a la izquierda -->
+    <h1 class="text-xl font-semibold text-cyan-400 tracking-wide glow-text">
+      <span class="text-cyan-500">📂</span> Backup de Configuraciones de Dispositivos de Red
+    </h1>
+
+    <!-- Botón logout alineado a la derecha -->
+    <button (click)="logout()" class="group relative px-6 py-2 bg-cyan-900/80 border border-cyan-500/50 rounded-lg overflow-hidden transition-all duration-500 hover:border-cyan-300 hover:bg-cyan-800">
+      <span class="relative z-10 flex items-center text-cyan-300 group-hover:text-cyan-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+        </svg>
+        TERMINAR SESIÓN
+      </span>
+      <span class="absolute inset-0 bg-cyan-500/20 w-0 group-hover:w-full transition-all duration-700"></span>
+    </button>
+  </div>
+
+  <!-- BACKDROP oscuro con efecto de desenfoque -->
+  <div *ngIf="isLoading"
+      class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md">
+
+    <!-- Contenedor del loading -->
+    <div class="relative w-[90%] max-w-md p-6 bg-black/80 border border-cyan-500/30 rounded-xl shadow-2xl shadow-cyan-500/20 flex flex-col items-center space-y-6">
+
+      <!-- Logo o ícono animado -->
+      <div class="relative w-14 h-14 mb-4">
+        <div class="absolute inset-0 border-2 border-cyan-400/50 rounded-full animate-ping opacity-20"></div>
+        <div class="absolute inset-1 border-2 border-cyan-400 rounded-full"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-cyan-400 p-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+
+      <!-- Texto dinámico según la operación en curso -->
+      <div class="flex flex-col items-center w-full px-4">
+        <p class="text-cyan-300 text-sm font-mono mb-1">SISTEMA:</p>
+        <p class="text-cyan-400 text-lg font-medium tracking-wide text-center w-full max-w-[85%] break-words">
+          {{ loadingMessage }}
+        </p>
+      </div>
+
+      <!-- Loading animado futurista -->
+      <div class="relative w-20 h-20 flex items-center justify-center">
+        <div class="absolute w-full h-full border-2 border-cyan-500 rounded-full animate-spin-slow opacity-80"></div>
+        <div class="absolute w-3/4 h-3/4 border-2 border-cyan-400 rounded-full animate-spin-slow-reverse opacity-60"></div>
+        <div class="absolute w-4 h-4 bg-cyan-400 rounded-full shadow-lg animate-pulse-glow"></div>
+      </div>
+
+      <!-- Barra de progreso (solo se muestra al finalizar) -->
+      <div *ngIf="progressVisible" class="w-full bg-gray-700 rounded-full h-1.5">
+        <div class="bg-cyan-500 h-1.5 rounded-full animate-progress"></div>
+      </div>
+
+      <!-- Texto de estado opcional -->
+      <p class="text-cyan-400/70 text-xs font-mono mt-2 animate-fade-in-out">
+        Por favor espere, procesando...
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="alertMessage"
+        class="fixed inset-0 w-screen h-screen flex items-center justify-center z-[9999] p-6 bg-black/80">
+    <div class="relative max-w-md w-full px-6 py-4 rounded-lg shadow-2xl backdrop-blur-[1px] transition-all duration-500 transform"
+        [ngClass]="{
+          'bg-green-900/80 border border-green-500/50 text-green-100': alertType === 'success',
+          'bg-red-900/80 border border-red-500/50 text-red-100': alertType === 'error',
+          'translate-y-0 opacity-100': showAlert,
+          'translate-y-4 opacity-0': !showAlert
+        }">
+
+      <!-- Icono dinámico -->
+      <div class="absolute top-3 left-4 text-2xl"
+          [ngClass]="{
+            'text-green-400': alertType === 'success',
+            'text-red-400': alertType === 'error'
+          }">
+        <svg *ngIf="alertType === 'success'" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <svg *ngIf="alertType === 'error'" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+      </div>
+
+      <!-- Mensaje -->
+      <div class="pl-12 pr-4">
+        <p class="font-medium text-lg mb-1">
+          {{ alertType === 'success' ? 'Éxito' : 'Error' }}
+        </p>
+        <p class="text-sm">{{ alertMessage }}</p>
+      </div>
+
+      <!-- Efecto de borde animado -->
+      <div class="absolute inset-0 rounded-lg overflow-hidden z-[-1]">
+        <div class="absolute inset-0 border-2 border-transparent animate-pulse"
+            [ngClass]="{
+              'border-green-500/30': alertType === 'success',
+              'border-red-500/30': alertType === 'error'
+            }"></div>
+      </div>
+
+      <!-- Botón de cierre con mejor interacción -->
+      <button (click)="closeAlert()"
+              class="absolute top-2 right-2 p-1 rounded-full transition-all duration-200 ease-in-out
+                    hover:bg-gray-700/80 hover:scale-110 hover:text-red-400 focus:outline-none cursor-pointer"
+              aria-label="Cerrar alerta">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="confirmMessage"
+        class="fixed inset-0 w-screen h-screen flex items-center justify-center z-[9999] p-6 bg-black/80">
+    <div class="relative max-w-md w-full px-6 py-4 rounded-lg shadow-2xl backdrop-blur-[1px] transition-all duration-500 transform"
+        [ngClass]="{
+          'bg-blue-900/80 border border-blue-500/50 text-blue-100': confirmType === 'question',
+          'translate-y-0 opacity-100': showConfirm,
+          'translate-y-4 opacity-0': !showConfirm
+        }">
+
+      <!-- Icono de pregunta -->
+      <div class="absolute top-3 left-4 text-2xl text-blue-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 7a1 1 0 111.999-.001A1 1 0 019 7zm2 8H9v-4h2v4z" clip-rule="evenodd" />
+        </svg>
+      </div>
+
+      <!-- Mensaje -->
+      <div class="pl-12 pr-4">
+        <p class="font-medium text-lg mb-1">Confirmación requerida</p>
+        <p class="text-sm">{{ confirmMessage }}</p>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex justify-end space-x-4 mt-4">
+        <button (click)="confirm(false)"
+                class="px-4 py-2 bg-gray-700/80 border border-gray-500/50 rounded-md transition-all duration-300 hover:bg-gray-600 hover:text-white">
+          CANCELAR
+        </button>
+        <button (click)="confirm(true)"
+                class="px-4 py-2 bg-blue-700/80 border border-blue-500/50 rounded-md transition-all duration-300 hover:bg-blue-600 hover:text-white">
+          ACEPTAR
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="relative z-10 flex h-screen pt-16"> <!-- Añadido pt-16 para el espacio de la barra superior -->
+    <!-- Panel izquierdo desplegable -->
+    <div class="relative">
+      <!-- backdrop que cubre toda la pantalla y cierra el slider al hacer click -->
+      <div
+        *ngIf="isOpen"
+        class="fixed inset-0 bg-black/80 backdrop-blur-[1px] z-40"
+        (click)="isOpen = false">
+      </div>
+
+      <!-- Slider - Panel izquierdo -->
+      <div class="fixed left-0 h-full bg-black/80 backdrop-blur-lg border-r border-cyan-500/20 p-6 flex flex-col shadow-2xl shadow-cyan-500/10 transition-transform duration-500 ease-in-out w-fit max-w-md z-50"
+          [ngClass]="{ 'translate-x-0': isOpen, '-translate-x-full': !isOpen }"
+          style="top: 4rem;"> <!-- ✅ Ajusta la altura según la barra superior -->
+
+        <!-- Encabezado del panel con mayor separación -->
+        <div class="flex items-center justify-between mb-12 overflow-visible flex-shrink-0 w-full gap-3">
+          <!-- Título con separación mejorada -->
+          <h2 class="text-2xl font-bold text-cyan-400 glow-text tracking-wider whitespace-nowrap">
+            <span class="text-cyan-500">></span> DISPOSITIVOS
+          </h2>
+
+          <!-- Botones compactos y más juntos -->
+          <div class="flex gap-3 justify-end">
+            <button (click)="addNewDevice()"
+                    class="group relative px-4 py-1 bg-cyan-900/60 border border-cyan-500/50 rounded-md transition-all duration-300 hover:bg-cyan-800/80 hover:shadow-cyan-500/30">
+              <span class="relative z-10 text-sm text-cyan-300 group-hover:text-white">+ NUEVO</span>
+              <span class="absolute inset-0 bg-cyan-500/20 w-0 group-hover:w-full transition-all duration-500"></span>
+            </button>
+
+            <button (click)="isOpen = false"
+                    class="group relative px-3 py-1 bg-gray-800/70 border border-gray-600/60 rounded-md transition-all duration-300 hover:bg-gray-700/90 hover:border-gray-500/70 hover:shadow-gray-500/30">
+              <span class="relative z-10 text-sm text-gray-400 group-hover:text-white">❮ OCULTAR</span>
+              <span class="absolute inset-0 bg-gray-500/20 w-0 group-hover:w-full transition-all duration-500"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabla de dispositivos -->
+        <div class="flex-1 overflow-y-auto max-h-[70vh] cyber-scrollbar">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-cyan-500/30">
+                <th class="text-left py-3 px-4 text-cyan-400 text-xs tracking-wider">NOMBRE</th>
+                <th class="text-left py-3 px-4 text-cyan-400 text-xs tracking-wider">IP</th>
+                <th class="text-left py-3 px-4 text-cyan-400 text-xs tracking-wider">TIPO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Mostrar dispositivos normales -->
+              @for (device of devices; track device.id) {
+                <tr [ngClass]="{
+                    'bg-cyan-900/40': selectedDevice?.id === device.id && device.name !== 'Nuevo Dispositivo',
+                    'bg-gray-700/30': device.name === 'Nuevo Dispositivo'
+                  }"
+                    (click)="selectDevice(device)"
+                    class="border-b border-cyan-500/10 hover:bg-cyan-800/30 cursor-pointer transition-all duration-300 group">
+
+                  <td class="py-3 px-4 text-sm" [ngClass]="{ 'text-gray-400': device.name === 'Nuevo Dispositivo' }">
+                    {{ device.name }}
+                  </td>
+
+                  <td class="py-3 px-4 font-mono text-cyan-300 text-xs">{{ device.ipAddress }}</td>
+
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-1 rounded-full text-xs
+                      {{ device.type === 'Cisco' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+                        device.type === 'Hp' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' :
+                        'bg-green-500/20 text-green-300 border border-green-500/30' }}">
+                      {{ device.type }}
+                    </span>
+                  </td>
+                </tr>
+              }
+
+              <!-- Mostrar dispositivo pendiente si existe -->
+              @if (showPendingDevice && pendingDevice) {
+                <tr class="bg-gray-600/30 border-b border-cyan-500/10 hover:bg-gray-700/40 cursor-pointer transition-all duration-300 group">
+                  <td class="py-3 px-4 text-sm text-gray-400 italic">{{ pendingDevice.name }}</td>
+                  <td class="py-3 px-4 font-mono text-gray-400 text-xs">{{ pendingDevice.ipAddress }}</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2 py-1 rounded-full text-xs border border-gray-500/50 text-gray-300 bg-gray-700/50">
+                      {{ pendingDevice.type }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botón para mostrar panel izquierdo cuando está oculto -->
+    <button *ngIf="!isOpen" (click)="isOpen = true"
+            class="fixed top-1/2 -translate-y-1/2 left-0 z-30 bg-cyan-500 text-white
+                  px-2 py-4 rounded-r-md shadow-lg transition-all duration-300 hover:bg-cyan-400">
+      ❯
+    </button>
+
+    <!-- Panel derecho - Detalles del dispositivo -->
+    <div class="flex-1 bg-black/80 backdrop-blur-lg overflow-y-auto">
+
+      <div *ngIf="selectedDevice" class="p-8">
+        <!-- Encabezado con efecto de terminal -->
+        <div class="flex justify-between items-center mb-8 pb-6 border-b border-cyan-500/20">
+          <h2 class="text-2xl font-bold text-cyan-400 glow-text tracking-wider">
+            <span class="text-cyan-500">></span> CONFIGURACIÓN: {{selectedDevice.name}}
+          </h2>
+        </div>
+
+        <!-- Panel derecho - Detalles del dispositivo -->
+        <div class="flex-1 bg-black/80 backdrop-blur-lg overflow-y-auto cyber-scrollbar">
+          <div *ngIf="selectedDevice" class="p-8">
+            <!-- Encabezado con efecto de terminal -->
+            <div class="flex justify-between items-center mb-10 pb-6 border-b border-cyan-500/20">
+              <h2 class="text-3xl font-bold text-cyan-400 glow-text tracking-wider">
+                <span class="text-cyan-500">></span> CONFIGURACIÓN DE NODO
+              </h2>
+              <div class="flex space-x-4">
+                <button (click)="saveDevice()"
+                        class="group relative px-6 py-2.5 bg-cyan-900/60 border border-cyan-500/50 rounded-md transition-all duration-300 hover:bg-cyan-800/80 hover:shadow-lg hover:shadow-cyan-500/30">
+                  <span class="relative z-10 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    GUARDAR
+                  </span>
+                  <span class="absolute inset-0 bg-cyan-500/20 w-0 group-hover:w-full transition-all duration-500"></span>
+                </button>
+                <button (click)="deleteDevice()"
+                        class="group relative px-6 py-2.5 bg-red-900/60 border border-red-500/50 rounded-md transition-all duration-300 hover:bg-red-800/80 hover:shadow-lg hover:shadow-red-500/30">
+                  <span class="relative z-10 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    ELIMINAR
+                  </span>
+                  <span class="absolute inset-0 bg-red-500/20 w-0 group-hover:w-full transition-all duration-500"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Formulario de dispositivo con estilo de terminal -->
+            <div class="grid grid-cols-2 gap-8 mb-10">
+              <!-- Columna izquierda -->
+              <div class="space-y-6">
+                <div class="cyber-input-group">
+                  <label class="cyber-label">NOMBRE DEL NODO</label>
+                  <input type="text" [(ngModel)]="selectedDevice.name"
+                        class="cyber-input">
+                </div>
+
+                <div class="cyber-input-group">
+                  <label class="cyber-label">DIRECCIÓN IP</label>
+                  <input type="text" [(ngModel)]="selectedDevice.ipAddress"
+                        class="cyber-input font-mono tracking-tight">
+                </div>
+
+                <div class="cyber-input-group">
+                  <label class="cyber-label">TIPO DE DISPOSITIVO</label>
+                  <select [(ngModel)]="selectedDevice.type"
+                          class="cyber-input">
+                    <option value="Cisco">CISCO ROUTER</option>
+                    <option value="Hp">HP SWITCH</option>
+                    <option value="Fortinet">FORTINET FIREWALL</option>
+                    <option value="Otro">OTRO DISPOSITIVO</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Columna derecha -->
+              <div class="space-y-6">
+                <div class="cyber-input-group">
+                  <label class="cyber-label">USUARIO SSH</label>
+                  <input type="text" [(ngModel)]="selectedDevice.username"
+                        class="cyber-input">
+                </div>
+
+                <div class="cyber-input-group">
+                  <label class="cyber-label">CONTRASEÑA</label>
+                  <div class="relative">
+                    <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="selectedDevice.password"
+                          class="cyber-input pr-12">
+                    <button (click)="showPassword = !showPassword"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors duration-200">
+                      {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+                    </button>
+                  </div>
+                </div>
+
+                <div class="cyber-input-group">
+                  <label class="cyber-label">PUERTO SSH</label>
+                  <input type="number" [(ngModel)]="selectedDevice.sshPort"
+                        class="cyber-input">
+                </div>
+              </div>
+            </div>
+
+            <!-- Configuración de backup con estilo futurista -->
+            <div class="border-t border-cyan-500/20 pt-8">
+              <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-cyan-400 glow-text tracking-wider">
+                  <span class="text-cyan-500">></span> PROGRAMACIÓN DE BACKUP (PARA TODOS LOS DISPOSITIVOS)
+                </h2>
+                <button (click)="testSSHConnection()"
+                        class="group relative px-6 py-2.5 bg-purple-900/60 border border-purple-500/50 rounded-md transition-all duration-300 hover:bg-purple-800/80 hover:shadow-lg hover:shadow-purple-500/30">
+                  <span class="relative z-10 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+                    </svg>
+                    PROBAR CONEXIÓN
+                  </span>
+                  <span class="absolute inset-0 bg-purple-500/20 w-0 group-hover:w-full transition-all duration-500"></span>
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-8">
+                <!-- Configuración de periodicidad -->
+                <div class="cyber-input-group">
+                  <label class="cyber-label">FRECUENCIA</label>
+                  <div class="grid grid-cols-3 gap-3">
+                    <label class="cyber-radio">
+                      <input type="radio"
+                            name="frequency"
+                            value="daily"
+                            [(ngModel)]="backupConfig.frequency"
+                            (ngModelChange)="onFrequencyChange($event)">
+                      <span>DIARIO</span>
+                    </label>
+                    <label class="cyber-radio">
+                      <input type="radio"
+                            name="frequency"
+                            value="weekly"
+                            [(ngModel)]="backupConfig.frequency"
+                            (ngModelChange)="onFrequencyChange($event)">
+                      <span>SEMANAL</span>
+                    </label>
+                    <label class="cyber-radio">
+                      <input type="radio"
+                            name="frequency"
+                            value="monthly"
+                            [(ngModel)]="backupConfig.frequency"
+                            (ngModelChange)="onFrequencyChange($event)">
+                      <span>MENSUAL</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Configuración específica según frecuencia -->
+                <div class="cyber-input-group" *ngIf="backupConfig.frequency !== 'monthly'">
+                  <label class="cyber-label">HORA DE EJECUCIÓN</label>
+                  <input type="time" [(ngModel)]="backupConfig.time"
+                        class="cyber-input">
+                </div>
+
+                <div class="cyber-input-group" *ngIf="backupConfig.frequency === 'weekly'">
+                  <label class="cyber-label">DÍA DE LA SEMANA</label>
+                  <select [(ngModel)]="backupConfig.weeklyDay"
+                          class="cyber-input">
+                    <option value="monday">LUNES</option>
+                    <option value="tuesday">MARTES</option>
+                    <option value="wednesday">MIÉRCOLES</option>
+                    <option value="thursday">JUEVES</option>
+                    <option value="friday">VIERNES</option>
+                    <option value="saturday">SÁBADO</option>
+                    <option value="sunday">DOMINGO</option>
+                  </select>
+                </div>
+
+                <div class="cyber-input-group" *ngIf="backupConfig.frequency === 'monthly'">
+                  <label class="cyber-label">DÍA DEL MES</label>
+                  <input type="number" min="1" max="31" [(ngModel)]="backupConfig.monthlyDay"
+                        class="cyber-input">
+                </div>
+
+                <!-- Carpeta de destino -->
+                <div class="cyber-input-group col-span-2">
+                  <label class="cyber-label">RUTA DE ALMACENAMIENTO</label>
+                  <input type="text" [(ngModel)]="backupConfig.localFolder"
+                        class="cyber-input font-mono">
+                </div>
+              </div>
+
+              <!-- Acciones finales -->
+              <div class="flex justify-end space-x-4 mt-10">
+                <button (click)="saveBackupConfig()"
+                        class="group relative px-8 py-3 bg-cyan-900/60 border border-cyan-500/50 rounded-lg transition-all duration-300 hover:bg-cyan-800/80 hover:shadow-lg hover:shadow-cyan-500/30">
+                  <span class="relative z-10 flex items-center text-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    GUARDAR CONFIGURACIÓN
+                  </span>
+                  <span class="absolute inset-0 bg-cyan-500/20 w-0 group-hover:w-full transition-all duration-500"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
