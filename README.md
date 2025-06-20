@@ -2,6 +2,18 @@
 
 Una aplicación Angular diseñada para gestionar y automatizar **backups de configuraciones almacenadas en contenedores Docker**, mediante autenticación, pruebas SSH y una interfaz moderna.
 
+---
+
+## 🎓 Proyecto Académico
+
+- **Asignatura:** Ingeniería de Software II  
+- **Carrera:** Ingeniería en Sistemas de Información  
+- **Docente Responsable:** Ing. René Gabriel Kutz  
+- **Institución:** Universidad de la Cuenca del Plata  
+- **Facultad:** Facultad de Ingeniería y Tecnología  
+
+---
+
 ## 🚀 Características
 
 - 🔐 **Autenticación segura con JWT**
