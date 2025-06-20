@@ -1,59 +1,111 @@
-# PlataformaAngularBackupsRedes
+# 📦 Docker Backup Manager (Frontend)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.1.
+Una aplicación Angular diseñada para gestionar y automatizar **backups de configuraciones almacenadas en contenedores Docker**, mediante autenticación, pruebas SSH y una interfaz moderna.
 
-## Development server
+## 🚀 Características
 
-To start a local development server, run:
+- 🔐 **Autenticación segura con JWT**
+- 🛠 **Pruebas de conexión SSH a dispositivos remotos**
+- 💾 **Respaldo automatizado de rutas como `/etc`, `/home` y `/var`**
+- 📋 **Panel de administración para visualizar dispositivos y configurar backups**
+- ⚠️ **Manejo centralizado de errores**
+- 🌐 **Interfaz conectada a un backend RESTful**
 
-```bash
-ng serve
+## 🧩 Estructura del Proyecto
+
+```
+src/
+ ┣ app/
+ ┃ ┣ login/              → Pantalla de autenticación
+ ┃ ┣ panel/              → Dashboard para configuración y ejecución de backups
+ ┃ ┣ error/              → Componente visual de manejo de errores
+ ┃ ┣ shared/
+ ┃ ┃ ┣ models/           → Interfaces de datos: BackupConfig, Device, SSH Response
+ ┃ ┃ ┣ services/         → Servicios como AuthService
+ ┃ ┃ ┣ guards/           → Rutas protegidas con AuthGuard
+ ┃ ┃ ┗ interceptors/     → Interceptores HTTP (JWT)
+ ┣ environments/         → Configuración para desarrollo y producción
+ ┣ index.html            → Entrada principal de la app
+ ┣ main.ts               → Bootstrap Angular
+ ┗ styles.scss           → Estilos globales
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## ⚙️ Configuración del entorno
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/devusuix/docker-backup-ui.git
+   cd docker-backup-ui
+   ```
 
-```bash
-ng generate component component-name
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+3. Configura tu endpoint del backend en `environment.ts`:
+   ```ts
+   export const environment = {
+     production: false,
+     apiUrl: 'http://localhost:8080/api'
+   };
+   ```
+
+4. Ejecuta la aplicación:
+   ```bash
+   ng serve --open
+   ```
+
+---
+
+## 🔄 Integración con Backend
+
+Esta aplicación se conecta con un backend Spring Boot que:
+- Orquesta comandos SSH remotos
+- Expone endpoints REST como `/api/panel`, `/api/devices`, `/api/auth/login`
+- Realiza respaldos de configuraciones almacenadas en contenedores y los guarda en una carpeta local.
+
+---
+
+## 📸 Vista previa
+
+### Login Page
+
+![login](image/login-devusui.png)
+
+### Error Page
+
+![error](image/error-devusui.png)
+
+### Dashboard Page
+
+![dashboard](image/dashboard-devusui.png)
+
+#### Device
+
+![device](image/device-devusui.png)
+
+---
+
+## 🛠 Tecnologías Usadas
+
+- [Angular 20](https://angular.io/)
+- TypeScript, RxJS
+- SCSS, HTML5
+- Docker (como objetivo de respaldo)
+
+---
+
+## 👤 Autor
+
+Desarrollado por **DevUsui-San**  
+_“Respalda con estilo, automatiza con propósito.”_
+
+---
+
+## 📝 Licencia
+
+Este proyecto es de código abierto y puedes adaptarlo libremente según tus necesidades.
 ```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
