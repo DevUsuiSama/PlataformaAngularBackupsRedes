@@ -120,4 +120,3 @@ _“Respalda con estilo, automatiza con propósito.”_
 ## 📝 Licencia
 
 Este proyecto es de código abierto y puedes adaptarlo libremente según tus necesidades.
-```
